@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中世纪村庄 · 第一人称漫游</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0f1114; }
+  body { font: 13px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; color: #e8e6e1; }
+  canvas { display: block; }
+
+  #boot, #fatal {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: #0f1114; z-index: 20; transition: opacity .35s ease;
+  }
+  #boot.done { opacity: 0; pointer-events: none; }
+  #fatal[hidden] { display: none; }
+  .card { width: min(440px, 86vw); padding: 22px 24px; border: 1px solid #2b2f36; border-radius: 12px; background: #161a1f; }
+  .card h1 { margin: 0 0 6px; font-size: 15px; font-weight: 500; letter-spacing: .02em; }
+  .card p { margin: 0 0 14px; color: #9aa3ae; font-size: 12px; }
+  .bar { height: 3px; border-radius: 2px; background: #232830; overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 0; background: #c9a227; transition: width .2s ease; }
+  .meta { margin-top: 10px; font-size: 11px; color: #78828e; font-variant-numeric: tabular-nums; }
+  #fatal .card { border-color: #5d2b2b; }
+  #fatal h1 { color: #f09595; }
+  #fatal ul { margin: 8px 0 0; padding-left: 18px; color: #b9c1cb; font-size: 12px; }
+
+  #hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+  #hud .panel {
+    position: absolute; padding: 9px 12px; border-radius: 10px; font-size: 12px;
+    background: rgba(18, 21, 26, .72); border: 1px solid rgba(255, 255, 255, .09);
+    backdrop-filter: blur(6px); color: #cfd6df;
+  }
+  #keys { left: 16px; bottom: 16px; line-height: 2; }
+  #keys b { color: #e8e6e1; font-weight: 500; }
+  kbd {
+    display: inline-block; min-width: 18px; padding: 0 5px; margin: 0 1px;
+    font: 11px/1.7 ui-monospace, Menlo, monospace; text-align: center;
+    color: #e8e6e1; background: #262b33; border: 1px solid #363d47; border-bottom-width: 2px; border-radius: 4px;
+  }
+  #status { right: 16px; bottom: 16px; text-align: right; font-variant-numeric: tabular-nums; }
+  #status span { color: #9aa3ae; }
+  #warn { left: 16px; top: 16px; max-width: 340px; border-color: rgba(224, 160, 60, .35); color: #e6c07a; display: none; }
+  #crosshair {
+    position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px;
+    border-radius: 50%; background: rgba(255, 255, 255, .55); box-shadow: 0 0 0 1px rgba(0, 0, 0, .35);
+  }
+  #lockhint {
+    position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%);
+    padding: 7px 14px; border-radius: 999px; font-size: 12px; letter-spacing: .04em;
+    background: rgba(18, 21, 26, .8); border: 1px solid rgba(255, 255, 255, .12); color: #d6dde6;
+  }
+  #lockhint.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div class="card">
+    <h1>中世纪村庄 · 正在组装</h1>
+    <p>559 条放置记录合并为少量绘制批次</p>
+    <div class="bar"><i id="boot-bar"></i></div>
+    <div class="meta" id="boot-meta">初始化…</div>
+  </div>
+</div>
+
+<div id="fatal" hidden>
+  <div class="card">
+    <h1>加载失败</h1>
+    <p id="fatal-msg"></p>
+    <ul>
+      <li>必须经 HTTP 打开：<code>python3 -m http.server 8080</code>，而非双击文件</li>
+      <li>需要访问 unpkg.com（Three.js）与 polyfork.dev（人物动画）</li>
+      <li>控制台 Network 面板可确认具体失败请求</li>
+    </ul>
+  </div>
+</div>
+
+<div id="hud">
+  <div class="panel" id="keys">
+    <b>移动</b> <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+    &nbsp;<b>奔跑</b> <kbd>Shift</kbd><br>
+    <b>视角</b> 鼠标 &nbsp;<b>昼夜</b> <kbd>T</kbd> &nbsp;<b>回起点</b> <kbd>R</kbd>
+  </div>
+  <div class="panel" id="warn"></div>
+  <div class="panel" id="status">
+    <div><span>时刻</span> <b id="st-time">golden</b></div>
+    <div><span>坐标</span> <b id="st-pos">0.0, 0.0</b></div>
+    <div><span>帧率</span> <b id="st-fps">–</b></div>
+  </div>
+  <div id="crosshair"></div>
+  <div id="lockhint">点击画面进入第一人称</div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { buildKit } from './kit.mjs';
+import stage from './stage.mjs';
+import { createAsset as createGround } from './terrain.mjs';
+
+const $ = (id) => document.getElementById(id);
+
+/* ---------- 故障可见化：所有异步失败都要落到界面上 ---------- */
+function fatal(err) {
+  console.error(err);
+  const detail = [
+    err?.name,
+    err?.message || (typeof err === 'string' ? err : ''),
+    err?.filename ? `${err.filename}:${err.lineno}:${err.colno}` : '',
+    err?.error ? `inner: ${err.error}` : '',
+  ].filter(Boolean).join(' · ') || `未知错误（type=${err?.type ?? typeof err}）`;
+  $('boot').classList.add('done');
+  $('fatal').hidden = false;
+  $('fatal-msg').textContent = detail;
+}
+addEventListener('error', (e) => fatal(e.error || e.message || e));
+addEventListener('unhandledrejection', (e) => fatal(e.reason));
+
+if (location.protocol === 'file:') {
+  fatal(new Error('当前为 file:// 协议，浏览器禁止加载 ES 模块'));
+}
+
+/* ---------- 渲染器与场景 ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 900);
+
+/* ---------- 地面 ----------
+ * LAYOUT.json 缺少 _terrain 行，buildKit 不会构建地面，故显式调用 terrain.mjs。
+ * 参数 cx/cz 经采样选定：村内 42×43 m 范围高差 0.00 m，河道最近处距村中心 47 m。 */
+const ground = createGround({
+  colorway: 'green-shire', res: 1, span: 2,
+  relief: 1, flatten: 1, river: 1, lynchets: 0.4,
+  cx: -8, cz: 3,
+});
+ground.name = 'terrain';
+scene.add(ground);
+
+/* ---------- 村庄 ---------- */
+const place = await buildKit({
+  folder: './',
+  people: 'idle',
+  onProgress: (n, total, key) => {
+    $('boot-bar').style.width = `${Math.round((n / total) * 100)}%`;
+    $('boot-meta').textContent = `部件 ${n}/${total} · ${key}`;
+  },
+});
+scene.add(place.group);
+
+const look = stage(renderer, scene, { time: 'golden' });
+await place.surround({ count: 160 });   // 村外环形播撒本套素材的树木岩石，遮住浮岛边缘
+look.shadows(place.group);
+
+/* ---------- 玩家状态 ---------- */
+const EYE = 1.68, RADIUS = 0.36, WALK = 3.2, RUN = 6.4;
+const IGNORE = new Set(['grass-tuft', 'path-stone-a', 'path-stone-b', 'grass-terrain-blob', 'dirt-terrain-blob']);
+
+/* 出生点：北侧空地（距中心 18 m），四周 8 方向净空、前向 5 m 无遮挡，
+ * 由 0.5 m 网格 × 46×77 候选点实测得出；若该点被占则退回 openSpot()。 */
+const spawn = new THREE.Vector3(-15.5, 0, -9);
+if (place.blocked(spawn.x, spawn.z, RADIUS)) spawn.copy(place.openSpot({}) ?? new THREE.Vector3(0, 0, 0));
+const player = {
+  pos: spawn.clone(),
+  yaw: Math.atan2(spawn.x, spawn.z),   // 前向为 (-sin yaw, -cos yaw)，此式使其指向村庄中心
+  pitch: -0.04,
+  y: 0,
+  bob: 0,
+};
+
+const terrainBox = new THREE.Box3().setFromObject(ground).expandByScalar(-6);
+const ray = new THREE.Raycaster();
+const DOWN = new THREE.Vector3(0, -1, 0);
+const probe = new THREE.Vector3();
+
+function groundY(x, z) {
+  probe.set(x, 80, z);
+  ray.set(probe, DOWN);
+  const hit = ray.intersectObject(ground, true)[0];
+  return hit ? hit.point.y : 0;
+}
+
+/* blocked() 返回该位置身体会碰到的部件键；装饰性植被与路面砖不参与阻挡。 */
+function canStand(x, z) {
+  if (x < terrainBox.min.x || x > terrainBox.max.x || z < terrainBox.min.z || z > terrainBox.max.z) return false;
+  const hit = place.blocked(x, z, RADIUS);
+  return !hit || IGNORE.has(hit);
+}
+
+/* ---------- 输入 ---------- */
+const keys = new Set();
+addEventListener('keydown', (e) => {
+  if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
+  keys.add(e.code);
+  if (e.repeat) return;
+  if (e.code === 'KeyT') cycleTime();
+  if (e.code === 'KeyR') reset();
+});
+addEventListener('keyup', (e) => keys.delete(e.code));
+addEventListener('blur', () => keys.clear());
+
+const canvas = renderer.domElement;
+let dragging = false;
+canvas.addEventListener('click', () => {
+  if (document.pointerLockElement !== canvas) canvas.requestPointerLock?.();
+});
+document.addEventListener('pointerlockchange', () => {
+  $('lockhint').classList.toggle('hidden', document.pointerLockElement === canvas);
+});
+canvas.addEventListener('pointerdown', () => { if (document.pointerLockElement !== canvas) dragging = true; });
+addEventListener('pointerup', () => { dragging = false; });
+addEventListener('mousemove', (e) => {
+  const locked = document.pointerLockElement === canvas;
+  if (!locked && !dragging) return;
+  // 指针锁定切换的瞬间会带一次极大的位移，钳制避免视角瞬移
+  const dx = Math.max(-120, Math.min(120, e.movementX || 0));
+  const dy = Math.max(-120, Math.min(120, e.movementY || 0));
+  player.yaw -= dx * 0.0022;
+  player.pitch -= dy * 0.0022;
+  player.pitch = Math.max(-1.4, Math.min(1.4, player.pitch));
+});
+
+/* ---------- 昼夜 ---------- */
+const TIMES = ['golden', 'day', 'noon', 'dusk', 'night', 'moonlit', 'dawn', 'overcast'];
+let timeIndex = 0;
+function cycleTime() {
+  timeIndex = (timeIndex + 1) % TIMES.length;
+  look.setTime(TIMES[timeIndex]);
+  $('st-time').textContent = TIMES[timeIndex];
+}
+
+function reset() {
+  player.pos.copy(spawn);
+  player.yaw = Math.atan2(spawn.x, spawn.z);
+  player.pitch = -0.04;
+  player.y = groundY(spawn.x, spawn.z);
+  player.bob = 0;
+}
+
+/* ---------- 主循环 ---------- */
+player.y = groundY(player.pos.x, player.pos.z);
+let last = performance.now(), frames = 0, fpsAt = last;
+
+renderer.setAnimationLoop((ms) => {
+  const dt = Math.min(0.05, (ms - last) / 1000);
+  last = ms;
+
+  const f = (keys.has('KeyW') || keys.has('ArrowUp') ? 1 : 0) - (keys.has('KeyS') || keys.has('ArrowDown') ? 1 : 0);
+  const s = (keys.has('KeyD') || keys.has('ArrowRight') ? 1 : 0) - (keys.has('KeyA') || keys.has('ArrowLeft') ? 1 : 0);
+  const speed = keys.has('ShiftLeft') || keys.has('ShiftRight') ? RUN : WALK;
+
+  if (f || s) {
+    const len = Math.hypot(f, s);
+    const sin = Math.sin(player.yaw), cos = Math.cos(player.yaw);
+    // 前向 (-sin, -cos)，右向 (cos, -sin)
+    const vx = ((-sin * f) + (cos * s)) / len * speed * dt;
+    const vz = ((-cos * f) + (-sin * s)) / len * speed * dt;
+
+    const nx = player.pos.x + vx;
+    if (canStand(nx, player.pos.z)) player.pos.x = nx;
+    const nz = player.pos.z + vz;
+    if (canStand(player.pos.x, nz)) player.pos.z = nz;
+
+    player.bob += dt * speed * 2.1;
+  }
+
+  const target = groundY(player.pos.x, player.pos.z);
+  player.y += (target - player.y) * Math.min(1, dt * 14);
+
+  const bobY = (f || s) ? Math.sin(player.bob) * 0.022 : 0;
+  camera.position.set(player.pos.x, player.y + EYE + bobY, player.pos.z);
+  camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
+
+  place.tick(ms / 1000);
+  look.update();
+  renderer.render(scene, camera);
+
+  frames++;
+  if (ms - fpsAt > 500) {
+    $('st-fps').textContent = Math.round((frames * 1000) / (ms - fpsAt));
+    $('st-pos').textContent = `${player.pos.x.toFixed(1)}, ${player.pos.z.toFixed(1)}`;
+    frames = 0;
+    fpsAt = ms;
+  }
+});
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ---------- 收尾 ---------- */
+const missingAnim = place.people.filter((p) => !p.anim).length;
+if (missingAnim) {
+  $('warn').style.display = 'block';
+  $('warn').textContent = `${missingAnim} 个角色未能加载动画片段（需访问 polyfork.dev），人物将静止站立。`;
+}
+console.info(`[kit] ${place.placed.length} 条放置 · ${place.people.length} 个角色 · 地面高差已在村内归零`);
+$('boot-bar').style.width = '100%';
+$('boot-meta').textContent = '完成';
+$('boot').classList.add('done');
+setTimeout(() => { $('boot').style.display = 'none'; }, 420);
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+Credit lines for CC BY 4.0, https://creativecommons.org/licenses/by/4.0/
+
+If you share or re-host one of these mesh files under CC BY, keep its line with it
+(the same line covers that model's .fbx, .usdz, .usda and .obj). Under the Polyfork
+licence no credit is needed. LICENSE.txt has both.
+
+anvil.glb  Anvil by Polyfork (https://polyfork.dev/asset/anvil-1286cb), CC BY 4.0
+barn.glb  Timber Barn by Polyfork (https://polyfork.dev/asset/timber-barn-90b3ce), CC BY 4.0
+barrel.glb  Barrel by Polyfork (https://polyfork.dev/asset/barrel-aadc94), CC BY 4.0
+blacksmith.glb  Blacksmith Forge by Polyfork (https://polyfork.dev/asset/blacksmith-forge-09fa85), CC BY 4.0
+bread-oven.glb  Clay Bread Oven by Polyfork (https://polyfork.dev/asset/clay-bread-oven-860b06), CC BY 4.0
+bridge-wood.glb  Wooden Bridge by Polyfork (https://polyfork.dev/asset/wooden-bridge-9d2308), CC BY 4.0
+bush.glb  Bush by Polyfork (https://polyfork.dev/asset/bush-8bb596), CC BY 4.0
+cart.glb  Wooden Cart by Polyfork (https://polyfork.dev/asset/wooden-cart-bf83d8), CC BY 4.0
+chapel.glb  Stone Chapel by Polyfork (https://polyfork.dev/asset/stone-chapel-03e774), CC BY 4.0
+chicken.glb  Village Chicken by Polyfork (https://polyfork.dev/asset/village-chicken-9ba715), CC BY 4.0
+cottage-small.glb  Thatched Cottage by Polyfork (https://polyfork.dev/asset/thatched-cottage-0e63f5), CC BY 4.0
+crate.glb  Wooden Crate by Polyfork (https://polyfork.dev/asset/wooden-crate-b9c96a), CC BY 4.0
+dirt-terrain-blob.glb  Dirt Terrain Blob by Polyfork (https://polyfork.dev/asset/dirt-terrain-blob-7227e6), CC BY 4.0
+draft-horse.glb  Draft Horse by Polyfork (https://polyfork.dev/asset/draft-horse-519160), CC BY 4.0
+fence-wood.glb  Wooden Fence by Polyfork (https://polyfork.dev/asset/wooden-fence-3d8ee7), CC BY 4.0
+flower-planter.glb  Flower Planter by Polyfork (https://polyfork.dev/asset/flower-planter-500ed2), CC BY 4.0
+gate-wood.glb  Wooden Gate by Polyfork (https://polyfork.dev/asset/wooden-gate-0e001c), CC BY 4.0
+gatehouse.glb  Village Gatehouse by Polyfork (https://polyfork.dev/asset/village-gatehouse-181a9e), CC BY 4.0
+granary.glb  Stilted Granary by Polyfork (https://polyfork.dev/asset/stilted-granary-3e7d7d), CC BY 4.0
+grass-terrain-blob.glb  Grass Terrain Blob by Polyfork (https://polyfork.dev/asset/grass-terrain-blob-389daa), CC BY 4.0
+grass-tuft.glb  Grass Tuft by Polyfork (https://polyfork.dev/asset/grass-tuft-5ccff0), CC BY 4.0
+ground-dirt.glb  Dirt Ground Tile by Polyfork (https://polyfork.dev/asset/dirt-ground-tile-da4a60), CC BY 4.0
+ground-grass.glb  Grass Ground Tile by Polyfork (https://polyfork.dev/asset/grass-ground-tile-131ec0), CC BY 4.0
+guard.glb  Village Guard by Polyfork (https://polyfork.dev/asset/village-guard-5f0f6f), CC BY 4.0
+haystack.glb  Haystack by Polyfork (https://polyfork.dev/asset/haystack-77b0dd), CC BY 4.0
+house-two-story.glb  Two-Story House by Polyfork (https://polyfork.dev/asset/two-story-house-40f6dc), CC BY 4.0
+lamp-post.glb  Lamp Post by Polyfork (https://polyfork.dev/asset/lamp-post-c9e409), CC BY 4.0
+market-stall.glb  Market Stall by Polyfork (https://polyfork.dev/asset/market-stall-94937d), CC BY 4.0
+merchant.glb  Merchant by Polyfork (https://polyfork.dev/asset/merchant-6f606b), CC BY 4.0
+orchard-tree.glb  Orchard Apple Tree by Polyfork (https://polyfork.dev/asset/orchard-apple-tree-b21f85), CC BY 4.0
+path-stone-a.glb  Path Stone A by Polyfork (https://polyfork.dev/asset/path-stone-a-aead48), CC BY 4.0
+path-stone-b.glb  Path Stone B by Polyfork (https://polyfork.dev/asset/path-stone-b-6ed75c), CC BY 4.0
+plough.glb  Horse Plough by Polyfork (https://polyfork.dev/asset/horse-plough-85a82e), CC BY 4.0
+quench-barrel.glb  Quench Barrel by Polyfork (https://polyfork.dev/asset/quench-barrel-0c78fd), CC BY 4.0
+roof-gable.glb  Gable Roof Section by Polyfork (https://polyfork.dev/asset/gable-roof-section-0394a8), CC BY 4.0
+roof-hip-corner.glb  Hip Roof Corner Section by Polyfork (https://polyfork.dev/asset/hip-roof-corner-section-91a58f), CC BY 4.0
+sack.glb  Grain Sack by Polyfork (https://polyfork.dev/asset/grain-sack-401d96), CC BY 4.0
+signpost.glb  Signpost by Polyfork (https://polyfork.dev/asset/signpost-8287c3), CC BY 4.0
+small-rock.glb  Small Rock by Polyfork (https://polyfork.dev/asset/small-rock-d43710), CC BY 4.0
+stone-wall.glb  Low Stone Wall by Polyfork (https://polyfork.dev/asset/low-stone-wall-8a8ea3), CC BY 4.0
+tavern.glb  Village Tavern by Polyfork (https://polyfork.dev/asset/village-tavern-4e94e3), CC BY 4.0
+terrain-water.glb  Water Blob by Polyfork (https://polyfork.dev/asset/water-blob-e2cdf2), CC BY 4.0
+terrain.glb  Medieval Village Terrain by Polyfork (https://polyfork.dev/asset/medieval-village-terrain-60051b), CC BY 4.0
+torch-sconce.glb  Wall Torch Sconce by Polyfork (https://polyfork.dev/asset/wall-torch-sconce-6ddb52), CC BY 4.0
+tradesman.glb  Tradesman by Polyfork (https://polyfork.dev/asset/tradesman-1707b9), CC BY 4.0
+tree-oak.glb  Oak Tree by Polyfork (https://polyfork.dev/asset/oak-tree-50ee7c), CC BY 4.0
+tree-stump.glb  Tree Stump by Polyfork (https://polyfork.dev/asset/tree-stump-8c0513), CC BY 4.0
+villager.glb  Male Villager by Polyfork (https://polyfork.dev/asset/villager-40255c), CC BY 4.0
+wagon-four-wheel.glb  Four-Wheel Wagon by Polyfork (https://polyfork.dev/asset/four-wheel-wagon-adb946), CC BY 4.0
+wall-corner.glb  Wall Corner by Polyfork (https://polyfork.dev/asset/wall-corner-7d4e04), CC BY 4.0
+wall-door.glb  Wall with Door by Polyfork (https://polyfork.dev/asset/wall-with-door-f936e9), CC BY 4.0
+wall-straight.glb  Wall Module by Polyfork (https://polyfork.dev/asset/wall-module-b92556), CC BY 4.0
+wall-window.glb  Wall with Window by Polyfork (https://polyfork.dev/asset/wall-with-window-6dad8f), CC BY 4.0
+watchtower.glb  Watchtower by Polyfork (https://polyfork.dev/asset/watchtower-140f78), CC BY 4.0
+water-trough.glb  Water Trough by Polyfork (https://polyfork.dev/asset/water-trough-318ee1), CC BY 4.0
+watermill.glb  Water Mill by Polyfork (https://polyfork.dev/asset/water-mill-b31972), CC BY 4.0
+well.glb  Village Well by Polyfork (https://polyfork.dev/asset/village-well-f8e361), CC BY 4.0
+wheat-plant.glb  Wheat Plant by Polyfork (https://polyfork.dev/asset/wheat-plant-7f29a1), CC BY 4.0
+wheelbarrow.glb  Wheelbarrow by Polyfork (https://polyfork.dev/asset/wheelbarrow-13f422), CC BY 4.0
+windmill.glb  Windmill by Polyfork (https://polyfork.dev/asset/windmill-3aad49), CC BY 4.0
